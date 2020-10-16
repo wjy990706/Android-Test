@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements Runnable
 
     float dollar_rate;
     float euro_rate;
-    float won_rate;//初始化汇率
+    float won_rate;
 
     String updateTime;//上次更新时间
     Date today;//本机时间
@@ -75,26 +75,26 @@ public class MainActivity extends AppCompatActivity implements Runnable
          }
 
         handler=new Handler() {//线程里的数据交给handle来处理
-            public void handleMessage (Message msg){
-                if (msg.what == 5) {
-                    Bundle bdl = (Bundle) msg.obj;
-                    dollar_rate=bdl.getFloat("dollar-rate");
-                    euro_rate=bdl.getFloat("euro-rate");
-                    won_rate=bdl.getFloat("won-rate");
+                    public void handleMessage (Message msg){
+                        if (msg.what == 0) {
+                            Bundle bdl = (Bundle) msg.obj;
+                            dollar_rate=bdl.getFloat("dollar-rate");
+                            euro_rate=bdl.getFloat("euro-rate");
+                            won_rate=bdl.getFloat("won-rate");
 
-                    editor = sharedPreferences.edit();
-                    editor.putFloat("dollar_rate",dollar_rate);
-                    editor.putFloat("won_rate",won_rate);
-                    editor.putFloat("euro_rate",euro_rate);
-                    editor.putString("uodateTime",todayStr);
-                    editor.apply();
+                            editor = sharedPreferences.edit();
+                            editor.putFloat("dollar_rate",dollar_rate);
+                            editor.putFloat("won_rate",won_rate);
+                            editor.putFloat("euro_rate",euro_rate);
+                            editor.putString("uodateTime",todayStr);
+                            editor.apply();
 
-                    Log.i("getNetRate", "handleMessage: dollar:"+dollar_rate);
-                    Log.i("getNetRate", "handleMessage: euro:"+euro_rate);
-                    Log.i("getNetRate", "handleMessage: won:"+won_rate);
+                            Log.i("getNetRate", "handleMessage: dollar:"+dollar_rate);
+                            Log.i("getNetRate", "handleMessage: euro:"+euro_rate);
+                            Log.i("getNetRate", "handleMessage: won:"+won_rate);
 
-                    Toast.makeText(MainActivity.this, "获取网络汇率", Toast.LENGTH_SHORT).show();
-                }
+                            Toast.makeText(MainActivity.this, "获取网络汇率", Toast.LENGTH_SHORT).show();
+                        }
                 super.handleMessage(msg);
             }
         };
@@ -135,6 +135,13 @@ public class MainActivity extends AppCompatActivity implements Runnable
 
         startActivityForResult(newActvity, 0);
     }
+    public void openlist(View btn)
+    {
+       if(btn.getId()==R.id.btn_openlist){
+           Intent list=new Intent(this,RateListActivity.class);
+           startActivity(list);
+       }
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)//处理返回的值
     {
@@ -160,8 +167,8 @@ public class MainActivity extends AppCompatActivity implements Runnable
 
         bundle=getNetSource();//获取getnetsource方法中存入bundle的汇率值
 
-        Message msg=handler.obtainMessage(5);
-        //msg.what=5;
+        Message msg=handler.obtainMessage(0);
+        //msg.what=0;
         msg.obj=bundle;//把bundle放进消息对象里
         handler.sendMessage(msg);//交由主线程处理
 

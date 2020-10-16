@@ -51,4 +51,11 @@
         android:layout_margin="45dp"
         android:text="@string/btn_open"
         android:onClick="open"/>
+    <Button
+        android:id="@+id/btn_openlist"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="45dp"
+        android:text="@string/btn_openlist"
+        android:onClick="openlist"/>
 </LinearLayout>

@@ -4,6 +4,7 @@
     <string name="btn_euro">EURO</string>
     <string name="btn_won">WON</string>
     <string name="btn_open">OPEN</string>
+    <string name="btn_openlist">OPENLIST</string>
     <string name="hint_inputRMB">please input RMB</string>
 
 
