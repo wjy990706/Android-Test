@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RateListActivity extends ListActivity implements Runnable{
+public class  RateListActivity extends ListActivity implements Runnable{
 Handler handler;
 String waitdata[]={"wait for a moment......"};
     @Override

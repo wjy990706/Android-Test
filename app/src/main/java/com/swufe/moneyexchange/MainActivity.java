@@ -136,11 +136,18 @@ public class MainActivity extends AppCompatActivity implements Runnable
         startActivityForResult(newActvity, 0);
     }
     public void openlist(View btn)
+{
+    if(btn.getId()==R.id.btn_openlist){
+        Intent list=new Intent(this,RateListActivity.class);
+        startActivity(list);
+    }
+}
+    public void openmylist(View btn)
     {
-       if(btn.getId()==R.id.btn_openlist){
-           Intent list=new Intent(this,RateListActivity.class);
-           startActivity(list);
-       }
+        if(btn.getId()==R.id.btn_openmylist){
+            Intent list=new Intent(this,MyListActivity.class);
+            startActivity(list);
+        }
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)//处理返回的值
