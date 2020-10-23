@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ListActivity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -13,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.jsoup.Jsoup;
@@ -27,31 +29,30 @@ import java.util.List;
 
 public class MyListActivity extends ListActivity implements Runnable, AdapterView.OnItemClickListener {
     Handler handler;
-    private ArrayList<HashMap<String,String>> listItems;//存放文字和图片信息
+    private ArrayList<HashMap<String, String>> listItems;//存放文字和图片信息
     private SimpleAdapter listItemAdapter;//声明适配器
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         initListView();
 
         this.setListAdapter(listItemAdapter);
 
-        Thread t=new Thread(this);
+        Thread t = new Thread(this);
         t.start();
 
-        handler=new Handler(){
+        handler = new Handler() {
             @Override
             public void handleMessage(@NonNull Message msg) {
-                if(msg.what==2){
-                    List<HashMap<String,String>> list2 = (List<HashMap<String,String>>)msg.obj;
+                if (msg.what == 2) {
+                    List<HashMap<String, String>> list2 = (List<HashMap<String, String>>) msg.obj;
                     listItemAdapter = new SimpleAdapter(MyListActivity.this,//当前上下文
                             list2,//adapter适配器的数据源
                             R.layout.list_item,//xml布局文件
-                            new String[]{"ItemTitle","ItemDetail"},
-                            new int[]{R.id.itemTitle,R.id.itemDetail});//创建adapter，一一对应关系
+                            new String[]{"ItemTitle", "ItemDetail"},
+                            new int[]{R.id.itemTitle, R.id.itemDetail});//创建adapter，一一对应关系
                     setListAdapter(listItemAdapter);
                 }
                 super.handleMessage(msg);
@@ -60,25 +61,26 @@ public class MyListActivity extends ListActivity implements Runnable, AdapterVie
 
         getListView().setOnItemClickListener(this);//监听列表事件，类要继承AdapterView.OnItemClickListener
     }
-    private void initListView()
-    {
+
+    private void initListView() {
         listItems = new ArrayList<HashMap<String, String>>();
         for (int i = 0; i < 10; i++) {
-            HashMap<String, String>map=new HashMap<String, String>();
-            map.put("ItemTitle","请稍后");//键值对
-            map.put("ItemDetail","正在获取");//键值对
+            HashMap<String, String> map = new HashMap<String, String>();
+            map.put("ItemTitle", "请稍后");//键值对
+            map.put("ItemDetail", "正在获取");//键值对
             listItems.add(map);//map值放入listItems中
 
         }
         listItemAdapter = new SimpleAdapter(this,//当前上下文
                 listItems,//adapter适配器的数据源
                 R.layout.list_item,//xml布局文件
-                new String[]{"ItemTitle","ItemDetail"},
-                new int[]{R.id.itemTitle,R.id.itemDetail});//创建adapter，一一对应关系
+                new String[]{"ItemTitle", "ItemDetail"},
+                new int[]{R.id.itemTitle, R.id.itemDetail});//创建adapter，一一对应关系
     }
+
     public void run() {
         //获取网络数据，放到list中，带回主线程
-        List<HashMap<String,String>> retList=new ArrayList<HashMap<String, String>>();
+        List<HashMap<String, String>> retList = new ArrayList<HashMap<String, String>>();
 
 
         Document doc = null;//把url路径里获取doc对象
@@ -103,26 +105,43 @@ public class MyListActivity extends ListActivity implements Runnable, AdapterVie
             String str1 = td0.text();
             String val = td5.text();
 
-            HashMap<String,String> map=new HashMap<String,String>();
-            map.put("ItemTitle",str1);
-            map.put("ItemDetail",val);
+            HashMap<String, String> map = new HashMap<String, String>();
+            map.put("ItemTitle", str1);
+            map.put("ItemDetail", val);
 
 
             retList.add(map);
         }
 
 
-
-
-
-        Message msg=handler.obtainMessage(2);
+        Message msg = handler.obtainMessage(2);
         //msg.what=1;
-        msg.obj=retList;//把bundle放进消息对象里
+        msg.obj = retList;//把bundle放进消息对象里
         handler.sendMessage(msg);//交由主线程处理
     }
+
+
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id)//点击列表，调用方法
     {
+
+
+        TextView title=(TextView)view.findViewById(R.id.itemTitle);
+        TextView detail=(TextView)view.findViewById(R.id.itemDetail);//通过点击获取view的内容
+        String titleStr= String.valueOf( title.getText());
+        String detailStr= String.valueOf( detail.getText());
+
+        Log.i("onItemClick: ", "titleStr= "+titleStr);
+        Log.i("onItemClick: ", "detailStr= "+detailStr);
+
+
+        Intent Calculer=new Intent(this,CalculerActivity.class);
+        Calculer.putExtra("title",titleStr);
+        Calculer.putExtra("detail",Float.parseFloat(detailStr));
+        startActivity(Calculer);
+
+
+
 
     }
 }
