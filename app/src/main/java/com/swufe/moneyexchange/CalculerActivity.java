@@ -20,5 +20,6 @@ public class CalculerActivity extends AppCompatActivity {
         Log.i("Calculer", "onCreate:title= "+title);
 
         ((TextView)findViewById(R.id.title2)).setText(title);
+
     }
 }

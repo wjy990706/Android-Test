@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class MyListActivity extends ListActivity implements Runnable, AdapterView.OnItemClickListener {
+public class MyListActivity extends ListActivity implements Runnable,AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
     Handler handler;
     private ArrayList<HashMap<String, String>> listItems;//存放文字和图片信息
     private SimpleAdapter listItemAdapter;//声明适配器
@@ -60,6 +60,7 @@ public class MyListActivity extends ListActivity implements Runnable, AdapterVie
         };
 
         getListView().setOnItemClickListener(this);//监听列表事件，类要继承AdapterView.OnItemClickListener
+        getListView().setOnItemLongClickListener(this);//长按监听，也要继承
     }
 
     private void initListView() {
@@ -137,11 +138,13 @@ public class MyListActivity extends ListActivity implements Runnable, AdapterVie
 
         Intent Calculer=new Intent(this,CalculerActivity.class);
         Calculer.putExtra("title",titleStr);
-        Calculer.putExtra("detail",Float.parseFloat(detailStr));
-        startActivity(Calculer);
+        Calculer.putExtra("detail",Float.parseFloat(detailStr));//传值
+        startActivity(Calculer);//打开新界面
 
+    }
 
-
-
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        return true;//返回true，长按之后短按不会生效。返回false的话短按也会生效
     }
 }
