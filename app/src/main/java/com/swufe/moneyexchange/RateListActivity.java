@@ -1,13 +1,11 @@
 package com.swufe.moneyexchange;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ListActivity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.Telephony;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
@@ -21,32 +19,34 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class  RateListActivity extends ListActivity implements Runnable{
-Handler handler;
-String waitdata[]={"wait for a moment......"};
+public class  RateListActivity extends ListActivity implements Runnable {
+    Handler handler;
+    String waitdata[] = {"wait for a moment......"};
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_rate_list);
-        List<String> list1=new ArrayList<String>();
-        for(int i=1;i<100;i++){list1.add("item"+i);
+        List<String> list1 = new ArrayList<String>();
+        for (int i = 1; i < 100; i++) {
+            list1.add("item" + i);
         }
 
-        ListAdapter adapter=new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,waitdata);
+        ListAdapter adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, waitdata);
         setListAdapter(adapter);
 
-        Thread t=new Thread(this);
+        Thread t = new Thread(this);
         t.start();
 
-        handler=new Handler(){
+        handler = new Handler() {
             @Override
             public void handleMessage(@NonNull Message msg) {
-                if(msg.what==1){
-                  List<String> list2 = (List<String>)msg.obj;
+                if (msg.what == 1) {
+                    List<String> list2 = (List<String>) msg.obj;
 
-                  ListAdapter adapter=new ArrayAdapter<String>(RateListActivity.this,android.R.layout.simple_list_item_1,list2);
-                  setListAdapter(adapter);
+                    ListAdapter adapter = new ArrayAdapter<String>(RateListActivity.this, android.R.layout.simple_list_item_1, list2);
+                    setListAdapter(adapter);
                 }
                 super.handleMessage(msg);
             }
@@ -56,7 +56,7 @@ String waitdata[]={"wait for a moment......"};
     @Override
     public void run() {
         //获取网络数据，放到list中，带回主线程
-      List<String> retList=new ArrayList<>();
+        List<String> retList = new ArrayList<>();
 
 
         Document doc = null;//把url路径里获取doc对象
@@ -84,12 +84,9 @@ String waitdata[]={"wait for a moment......"};
         }
 
 
-
-
-
-        Message msg=handler.obtainMessage(1);
+        Message msg = handler.obtainMessage(1);
         //msg.what=1;
-        msg.obj=retList;//把bundle放进消息对象里
+        msg.obj = retList;//把bundle放进消息对象里
         handler.sendMessage(msg);//交由主线程处理
     }
 
