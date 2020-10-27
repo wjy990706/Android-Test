@@ -46,4 +46,16 @@ public class RateManager {
         return rateList;
 
     }
+
+    public void addAll(List<RateItem> list){
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        for (RateItem item : list) {
+            ContentValues values = new ContentValues();
+            values.put("curname", item.getCurName());
+            values.put("currate", item.getCurRate());
+            db.insert(TBNAME, null, values);
+        }
+        db.close();
+    }
+
 }
