@@ -57,5 +57,23 @@ public class RateManager {
         }
         db.close();
     }
+    public void deleteAll(){
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        db.delete(TBNAME,null,null);
+        db.close();
+    }
+    public void delete(int id){
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        db.delete(TBNAME, "ID=?", new String[]{String.valueOf(id)});
+        db.close();
+    }
 
+    public void update(RateItem item){
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("curname", item.getCurName());
+        values.put("currate", item.getCurRate());
+        db.update(TBNAME, values, "ID=?", new String[]{String.valueOf(item.getId())});
+        db.close();
+    }
 }

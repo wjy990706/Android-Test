@@ -81,7 +81,7 @@ public class  RateListActivity extends ListActivity implements Runnable {
            }
         }
         else {
-            Log.i("run","日期相等，从网络中获取在线数据");
+            Log.i("run","日期不相等，从网络中获取在线数据");
             Document doc = null;//把url路径里获取doc对象
             try {
                 Thread.sleep(3000);
@@ -108,7 +108,15 @@ public class  RateListActivity extends ListActivity implements Runnable {
                 rateList.add(new RateItem(str1,val));
             }
               RateManager manager=new RateManager(this);
+              manager.deleteAll();
               manager.addAll(rateList);
+
+            //更新记录日期
+            SharedPreferences sp = getSharedPreferences("myrate", Context.MODE_PRIVATE);
+            SharedPreferences.Editor edit = sp.edit();
+            edit.putString(DATE_SP_KEY, curDateStr);
+            edit.commit();
+            Log.i("run","更新日期结束：" + curDateStr);
 
             Message msg = handler.obtainMessage(1);
             //msg.what=1;
